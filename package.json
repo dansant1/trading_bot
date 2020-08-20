@@ -1,0 +1,25 @@
+{
+  "name": "trading_bot",
+  "version": "0.0.1",
+  "description": "EA de trading para Criptomonedas",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dansant1/trading_bot.git"
+  },
+  "keywords": [
+    "trading"
+  ],
+  "author": "DANIEL DELGADILLO && mOrangeSoft",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dansant1/trading_bot/issues"
+  },
+  "homepage": "https://github.com/dansant1/trading_bot#readme",
+  "dependencies": {
+    "binance-api-node": "^0.10.4"
+  }
+}
