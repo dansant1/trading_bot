@@ -23,7 +23,31 @@ const min = ( input ) => {
     return Math.min.apply(null, input);
 }
 
-let candles = async ( symbol, startTime, endTime, interval ) => {
+const getCambios = async ( maximo, minimo, symbol ) => {
+
+    try {
+
+        let currentPrice = await client.prices()
+
+        console.log( "PRECIO ACTUAL: ", currentPrice[symbol] )
+
+        if ( currentPrice[symbol] > maximo ) {
+            return "2DO CAMBIO"
+        }
+
+        if ( currentPrice[symbol] < minimo ) {
+            return "1ER CAMBIO"
+        }
+
+        return "DENTRO DEL MAXIMO Y MINIMO"
+
+    } catch( error ) {
+
+    }
+
+}
+
+const candles = async ( symbol, startTime, endTime, interval ) => {
 
     try {
 
@@ -70,73 +94,9 @@ let candles = async ( symbol, startTime, endTime, interval ) => {
 
 }
 
-var d = new Date();
-d.setDate(d.getDate() - 1);
 
-var v = new Date();
-v.setDate(v.getDate() - 2);
-
-var interval = "1m"
-
-candles( 'BTCUSDT', v.getTime(), d.getTime(), interval )
-
-async function getCambios ( maximo, minimo, symbol ) {
-
-    try {
-
-        let currentPrice = await client.prices()
-
-        console.log( "PRECIO ACTUAL: ", currentPrice[symbol] )
-
-        if ( currentPrice[symbol] > maximo ) {
-            return "2DO CAMBIO"
-        }
-
-        if ( currentPrice[symbol] < minimo ) {
-            return "1ER CAMBIO"
-        }
-
-        return "DENTRO DEL MAXIMO Y MINIMO"
-
-    } catch( error ) {
-
+module.exports = {
+    getData: function ( symbol, startTime, endTime, interval ) {
+        candles( symbol, startTime, endTime, interval )
     }
-
 }
-
-/*let getMaximo = async () => {
-
-    try {
-        
-        let velas = candles( 'BTCUSD' );
-        
-        setTimeout( function () {
-        
-            let maximos = []
-    
-            let maximo;
-
-            console.log( "VELAS: ", velas )
-    
-            velas.forEach( vela => {
-                maximos.push( parseFloat( vela.high ) )
-            })
-    
-            maximo = max( maximos )
-    
-            console.log( "MAXIMO: ", maximo )
-    
-            return maximo;
-    
-        }, 10000)
-
-    } catch ( error ) {
-        console.log( error )
-    }
-
-} */
-
-console.log("server running")
-
-//getMaximo()
-
