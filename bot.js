@@ -1,5 +1,9 @@
 const Binance = require('binance-api-node').default;
 
+const axios = require('axios');
+
+const url = "http://localhost:3000/"
+
 // Authenticated client
 const client = Binance({
   apiKey: 'PRNftqGtVHQQVEslaquiH9rxcUZKsVVp5s32VQi5NvCWROCJEXwtEb5WpMwTSXCR',
@@ -23,7 +27,7 @@ const min = ( input ) => {
     return Math.min.apply(null, input);
 }
 
-const getCambios = async ( maximo, minimo, symbol ) => {
+const getCambios = async ( maximo, minimo, symbol, _id ) => {
 
     try {
 
@@ -31,15 +35,46 @@ const getCambios = async ( maximo, minimo, symbol ) => {
 
         console.log( "PRECIO ACTUAL: ", currentPrice[symbol] )
 
+        let message = "";
+
         if ( currentPrice[symbol] > maximo ) {
-            return "2DO CAMBIO"
+        
+            message = "2DO CAMBIO"
+        
+        } else if ( currentPrice[symbol] < minimo ) {
+        
+            message = "1ER CAMBIO"
+        
+        } else {
+
+            message = "DENTRO DEL MAXIMO Y MINIMO"
+        
         }
 
-        if ( currentPrice[symbol] < minimo ) {
-            return "1ER CAMBIO"
-        }
+        let puntos = maximo - minimo
 
-        return "DENTRO DEL MAXIMO Y MINIMO"
+        let data = {
+            _id,
+            symbol,
+            maximo,
+            minimo,
+            puntos,
+            message
+        };
+
+          // AQUI Hacemos una llamda HTTP a Meteor para gestionar los inventarios del vendedores y del comprador
+          axios({
+            method: 'post',
+            url: `${url}methods/update_config`,
+            data,
+          })
+          .then(response => {
+              console.log(response);
+          })        
+          .catch(error => {
+              console.log(error);
+          });
+
 
     } catch( error ) {
 
@@ -47,7 +82,7 @@ const getCambios = async ( maximo, minimo, symbol ) => {
 
 }
 
-const candles = async ( symbol, startTime, endTime, interval ) => {
+const candles = async ( symbol, startTime, endTime, interval, _id ) => {
 
     try {
 
@@ -79,7 +114,7 @@ const candles = async ( symbol, startTime, endTime, interval ) => {
         console.log( "MIN: ", minimo )
         console.log( "PUNTOS: ", puntos )
 
-        getCambios( maximo, minimo, symbol ).then( data => {
+        getCambios( maximo, minimo, symbol, _id ).then( data => {
             console.log( data )
         }).catch( error => {
             console.log( error )
@@ -96,7 +131,7 @@ const candles = async ( symbol, startTime, endTime, interval ) => {
 
 
 module.exports = {
-    getData: function ( symbol, startTime, endTime, interval ) {
-        candles( symbol, startTime, endTime, interval )
+    getData: function ( symbol, startTime, endTime, interval, _id ) {
+        candles( symbol, startTime, endTime, interval, _id )
     }
 }

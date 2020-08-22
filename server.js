@@ -23,14 +23,15 @@ bot.post( function (req, res) {
 
 
     let symbol = req.body.symbol;
-    let startTime =  v.getTime() //req.body.startTime;
-    let endTime = d.getTime() //req.body.endTime;
-    let interval = "5m" //req.body.interval;
+    let startTime =  req.body.startTime;
+    let endTime = req.body.endTime;
+    let interval = req.body.interval;
+    let _id = req.body._id;
 
     console.log( symbol )
     
     if ( symbol !== "" ) {
-        BOT.getData( symbol, startTime, endTime, interval )
+        BOT.getData( symbol, startTime, endTime, interval, _id )
 
         res.send("OK")
     } 
