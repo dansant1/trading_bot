@@ -29,10 +29,13 @@ bot.post( function (req, res) {
     let interval = req.body.interval;
     let _id = req.body._id;
 
+    let api_key = req.body.api_key
+    let secret_key = req.body.secret_key
+
     console.log( symbol )
     
     if ( symbol !== "" ) {
-        BOT.getData( symbol, startTime, endTime, interval, _id, minimo_primero_cambio )
+        BOT.getData( symbol, startTime, endTime, interval, _id, minimo_primero_cambio, api_key, secret_key )
 
         res.send("OK")
     } 

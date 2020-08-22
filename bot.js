@@ -27,13 +27,18 @@ const min = ( input ) => {
     return Math.min.apply(null, input);
 }
 
-const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio ) => {
+const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio, apiKey, apiSecret ) => {
 
     try {
 
+        let client = Binance({
+            apiKey,
+            apiSecret
+        })
+
         let currentPrice = await client.prices()
 
-        let minimo_primero_cambio = 0;
+        //minimo_primero_cambio = 0;
 
         console.log( "PRECIO ACTUAL: ", currentPrice[symbol] )
 
@@ -95,9 +100,14 @@ const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio ) 
 
 }
 
-const candles = async ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio ) => {
+const candles = async ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio, apiKey, apiSecret ) => {
 
     try {
+
+        let client = Binance({
+            apiKey,
+            apiSecret
+        })
 
         let data = await client.candles({ symbol, startTime, endTime, interval }) 
 
@@ -127,7 +137,7 @@ const candles = async ( symbol, startTime, endTime, interval, _id, minimo_primer
         console.log( "MIN: ", minimo )
         console.log( "PUNTOS: ", puntos )
 
-        getCambios( maximo, minimo, symbol, _id, minimo_primero_cambio ).then( data => {
+        getCambios( maximo, minimo, symbol, _id, minimo_primero_cambio, apiKey, apiSecret ).then( data => {
             console.log( data )
         }).catch( error => {
             console.log( error )
@@ -144,7 +154,7 @@ const candles = async ( symbol, startTime, endTime, interval, _id, minimo_primer
 
 
 module.exports = {
-    getData: function ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio ) {
-        candles( symbol, startTime, endTime, interval, _id, minimo_primero_cambio )
+    getData: function ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio, api_key, secret_key ) {
+        candles( symbol, startTime, endTime, interval, _id, minimo_primero_cambio, api_key, secret_key )
     }
 }
