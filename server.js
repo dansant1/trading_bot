@@ -25,13 +25,14 @@ bot.post( function (req, res) {
     let symbol = req.body.symbol;
     let startTime =  req.body.startTime;
     let endTime = req.body.endTime;
+    let minimo_primero_cambio = req.body.minimo_primero_cambio;
     let interval = req.body.interval;
     let _id = req.body._id;
 
     console.log( symbol )
     
     if ( symbol !== "" ) {
-        BOT.getData( symbol, startTime, endTime, interval, _id )
+        BOT.getData( symbol, startTime, endTime, interval, _id, minimo_primero_cambio )
 
         res.send("OK")
     } 

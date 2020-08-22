@@ -27,11 +27,13 @@ const min = ( input ) => {
     return Math.min.apply(null, input);
 }
 
-const getCambios = async ( maximo, minimo, symbol, _id ) => {
+const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio ) => {
 
     try {
 
         let currentPrice = await client.prices()
+
+        let minimo_primero_cambio = 0;
 
         console.log( "PRECIO ACTUAL: ", currentPrice[symbol] )
 
@@ -44,6 +46,8 @@ const getCambios = async ( maximo, minimo, symbol, _id ) => {
         } else if ( currentPrice[symbol] < minimo ) {
         
             message = "1ER CAMBIO"
+
+            minimo_primero_cambio = currentPrice[symbol]
         
         } else {
 
@@ -51,7 +55,15 @@ const getCambios = async ( maximo, minimo, symbol, _id ) => {
         
         }
 
-        let puntos = maximo - minimo
+        let puntos = maximo - minimo;
+
+        if ( minimo_primero_cambio !== 0 ) {
+
+            if ( currentPrice[symbol] < minimo_primero_cambio ) {
+                message = message + " Y EL PRECIO ROMPIO EL MINIMO DEL 1ER CAMBIO"
+            }
+
+        }
 
         let data = {
             _id,
@@ -59,7 +71,8 @@ const getCambios = async ( maximo, minimo, symbol, _id ) => {
             maximo,
             minimo,
             puntos,
-            message
+            message,
+            minimo_primero_cambio
         };
 
           // AQUI Hacemos una llamda HTTP a Meteor para gestionar los inventarios del vendedores y del comprador
@@ -82,7 +95,7 @@ const getCambios = async ( maximo, minimo, symbol, _id ) => {
 
 }
 
-const candles = async ( symbol, startTime, endTime, interval, _id ) => {
+const candles = async ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio ) => {
 
     try {
 
@@ -114,7 +127,7 @@ const candles = async ( symbol, startTime, endTime, interval, _id ) => {
         console.log( "MIN: ", minimo )
         console.log( "PUNTOS: ", puntos )
 
-        getCambios( maximo, minimo, symbol, _id ).then( data => {
+        getCambios( maximo, minimo, symbol, _id, minimo_primero_cambio ).then( data => {
             console.log( data )
         }).catch( error => {
             console.log( error )
@@ -131,7 +144,7 @@ const candles = async ( symbol, startTime, endTime, interval, _id ) => {
 
 
 module.exports = {
-    getData: function ( symbol, startTime, endTime, interval, _id ) {
-        candles( symbol, startTime, endTime, interval, _id )
+    getData: function ( symbol, startTime, endTime, interval, _id, minimo_primero_cambio ) {
+        candles( symbol, startTime, endTime, interval, _id, minimo_primero_cambio )
     }
 }
