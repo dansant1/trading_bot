@@ -82,7 +82,7 @@ const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio ) 
             data,
           })
           .then(response => {
-              console.log(response);
+              console.log( response.status );
           })        
           .catch(error => {
               console.log(error);
