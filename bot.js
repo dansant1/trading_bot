@@ -66,9 +66,9 @@ const getCambios = async ( maximo, minimo, symbol, _id, minimo_primero_cambio, a
 
             if ( currentPrice[symbol] < minimo_primero_cambio ) {
                 message = message + " Y EL PRECIO ROMPIO EL MINIMO DEL 1ER CAMBIO"
-            }
+            } else { minimo_primero_cambio = 0 }
 
-        }
+        } 
 
         let data = {
             _id,
